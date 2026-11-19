@@ -7,7 +7,7 @@ import sys
 import tempfile
 
 import numpy as np
-from scipy.io import savemat
+import h5py
 import yaml
 
 root = Path(__file__).resolve().parents[1]
@@ -29,13 +29,16 @@ with tempfile.TemporaryDirectory(prefix='sais-smoke-') as temp:
         case = base/phase
         case.mkdir()
         phi = .2 + amplitude*np.cos(4*np.pi*np.arange(96)/96)
-        density = case/'density.mat'
-        savemat(density, {'A': np.array([[8.]]), 'phiA': phi, 'phiB': 1-phi})
+        density = case/'densities.h5'
+        with h5py.File(density, 'w') as stream:
+            stream.create_dataset('phiA', data=phi)
+            stream.create_dataset('phiB', data=1-phi)
         (case/'config.yml').write_text(yaml.safe_dump(config, allow_unicode=True), encoding='utf-8')
         (case/'summary.yml').write_text(yaml.safe_dump({
             'F': energy, 'residual': 1e-7, 'stress_norm': 1e-6,
-            'convergence': 'JuPolyorder.Successful()'}), encoding='utf-8')
-        cases.append({'id': phase, 'input': str(density), 'metadata_dir': str(case)})
+            'convergence': 'JuPolyorder.Successful()',
+            'lattice': {'unitcell': {'dim': 1, 'a': 8.}}}), encoding='utf-8')
+        cases.append({'id': phase, 'input': str(case), 'metadata_dir': str(case)})
         for path in case.iterdir():
             originals[path] = hashlib.sha256(path.read_bytes()).hexdigest()
     batch = base/'cases.json'
