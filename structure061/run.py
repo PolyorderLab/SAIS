@@ -15,6 +15,10 @@ from morphology import canonical,classify_topology
 from joint_evidence import apply as apply_joint_evidence
 
 from geometry061 import planar,lamellar
+from lam_family402 import describe as diagnose_lam
+from supercell402 import select_representation
+from particle402 import apply as apply_particle
+from extinction402 import annotate as annotate_extinction
 
 def tri_audit(fields,A):
     # Independent conventional-cell A15 point-set fit, with periodic translations.
@@ -63,8 +67,10 @@ if __name__=='__main__':
     for c in cases:
         f,A,before=load(Path(c['input']));guard=evaluate(f);r=dict(candidate=None,status=guard['decision'])
         if guard['decision']=='native_required':
-            fs,B,route=project(f,A);lam=lamellar(fs)
+            fs,B,route=project(f,A);lam_diagnostic=diagnose_lam(fs,B);fs,B,supercell=select_representation(fs,B,refs);lam=lamellar(fs)
             if lam:r=dict(candidate='LAM',status='one_dimensional_structure_supported',evidence=lam)
+            elif lam_diagnostic and lam_diagnostic['family_supported']:
+                r=dict(candidate='LAM',status='one_dimensional_structure_supported' if lam_diagnostic['verified_repeats'] else 'review_layer_repeat_unverified',evidence=lam_diagnostic)
             else:
                 r=identify(fs[0],B,refs[len(B)]) if len(B) in refs else dict(candidate=None,status='review_low_dimension')
                 r['scattering_candidate']=r['candidate'];ev=planar(fs,B)
@@ -81,7 +87,11 @@ if __name__=='__main__':
                     audit=tri_audit(fs,B);r['independent_topology']=audit
                     if not any(all(t['isolated'] and all(e==1 for e in t.get('isolated_domain_euler',[])) for t in comp['checks']) for comp in audit):
                         r['candidate']=None;r['status']='review_particle_candidate_but_nonisolated_domains'
+            if lam_diagnostic:
+                r['lam_diagnostic']=lam_diagnostic
+                if lam_diagnostic['family_supported']:r['morphology_family']='LAM'
             r['dimensional_routing']=route
+            r['supercell_reduction']=supercell
             if len(B)==3 and r.get('candidate') is None:
                 from detail import describe
                 layer=describe(fs,B);r['layer_evidence']=layer
@@ -104,12 +114,15 @@ if __name__=='__main__':
                 if r['structure_name'] in ('TriCylinder','TriCylinder+BCC','Torus'):
                     r['candidate']=r['structure_name'];r['status']='topology_supported_morphology'
                 else:r['status']='mixed_morphology_identified_phase_unresolved'
+        if guard['decision']=='native_required' and len(B)==3:
+            r=apply_particle(r,fs,B)
+            r=annotate_extinction(r,fs)
         r['reference_key']=r.get('scattering_candidate')
         r['candidate_before_normalization']=r['candidate']
         r['candidate']=canonical(r['candidate'])
         r['physical_phase_candidate']=r['candidate']
         r=apply_joint_evidence(r,f,Path(c['input']),c.get('metadata_dir'))
-        r.update(id=c['id'],input_hashes_before=before,input_hashes_after=load(Path(c['input']))[2],confirmed_label=None,database_written=False)
+        r.update(release_version='v4.0.2-experimental',id=c['id'],input_hashes_before=before,input_hashes_after=load(Path(c['input']))[2],confirmed_label=None,database_written=False)
         assert before==r['input_hashes_after']
         (out/(c['id']+'.json')).write_text(json.dumps(r,indent=2))
         summary.append(dict(id=c['id'],candidate=r['candidate'],status=r['status']))
