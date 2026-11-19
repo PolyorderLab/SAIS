@@ -16,3 +16,10 @@ supercell checks. Single-layer comparisons can remain unavailable. Input quality
 and unresolved conflicts can still require review; no sample-ID label overrides.
 
 This is a snapshot of existing code, not a new algorithm release or deployment.
+
+## Reference-library packaging
+
+`v4.0.1-bundled` and the updated development branch include the two original
+reference MAT libraries, hash verification, and an end-to-end synthetic smoke
+check. Classifier source hashes are unchanged. The original `v4.0.1` tag is
+preserved as the historical code-only snapshot.
