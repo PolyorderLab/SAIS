@@ -1,0 +1,32 @@
+{
+  "version": "v4.0.1",
+  "files": {
+    "entry.py": "380e0a76823d743892be8dbcc35e2aca7784f38b090daab94104f8bca292c35d",
+    "structure061/compare061.py": "6e4131a96f479b8cf35f324830ec338ff26f0a82176bebb9da60ea3413e4b8b5",
+    "structure061/detail.py": "666ad3f1814c353e46254934c4e4b284fca50fe3052070aee8cd8db589a9d050",
+    "structure061/geometry061.py": "cfbcc153d400d4803396e1a9db7c5b297e52807afcc36ccadbf4722a01df56d0",
+    "structure061/joint_evidence.py": "faceb497d1406cba35bb4f3222f8b8aa6a8149436bbf9797ed11eadfec91046d",
+    "structure061/morphology.py": "198e32754506edfc18016bdb01a2a9a91fbfe52e7ec6901c8403059093a3e4a2",
+    "structure061/publish.py": "30cc3b6134997774d7a406982ffec18d2be15e370e2ea68de3bb446096d7bb24",
+    "structure061/publish061.py": "47931f1fe414ac4f3c5104207d85ff72bcec45047a733ff606df13cb1bb4ac50",
+    "structure061/replay.py": "ad1e2a89da4fece86e8730995b6d5c7747c26e4bc0f39045af6f6c7ede49ca7a",
+    "structure061/report.py": "ab1cd4bb63fbd2931e6ab30d929c7c14685cb3a26ba07c20972d474b1c8c9b1f",
+    "structure061/run.py": "bf450c3d836f923e7a1b42ec402aa7ec4e4a0f13dd29915176a7fbc1fcdfa307",
+    "structure061/scattering.py": "ddefc43599aa8048d8d96ec5e62377061c93a921e101dcbe641c0e5beeb9ad23",
+    "structure061/structure_checks.py": "b927f505e8aca4d06a8adb562dc511d07214ca5b5195c31fdbb08dbf5b85fd14",
+    "structure061/test_controls.py": "cbb7d7da4c08b1e11876311250c6ac8872d82618b54f4aba284488fcc94d39a2",
+    "structure061/test_geometry061.py": "3d0d80fd7871e450a684e6189346dd8881a0568e92f43f1f016acacc6e39e584",
+    "structure061/test_joint_evidence.py": "e8c7e236d8410fb989c25d7851f691fccbb9026f730195b17b4475f358ef6a05",
+    "investigation068/base061.py": "faceb497d1406cba35bb4f3222f8b8aa6a8149436bbf9797ed11eadfec91046d",
+    "investigation068/joint_evidence.py": "fde4c81007460843045bad72b4de3760e4e18ec5bd0d17e493da368f6da639ac",
+    "phase_identifier_robust047/classify.py": "5abfcaec6bbefb1244df760e993bafe6f376ea2d7f4ec3174d59c1bb27aaa1f7",
+    "phase_identifier_robust047/classify_batch.py": "14ea2c9c518f184eaa45fe5c9b47adaac1d889eb57f20f4f98d72c78b8b08413",
+    "phase_identifier_robust047/diagnose.py": "28ed33d2933ba74850513f4091a1d67e86979971bc8425bf6c62be218bd0435f",
+    "phase_identifier_robust047/effective_2d.py": "7794d38878dacbe8740d53896c217989b2a02a465001326c050964fa1084d374",
+    "phase_identifier_robust047/robust_checks.py": "9dfa1a40432ea41030ffa9545439dfd03d4693098d4e735f57b9243e206fd629",
+    "phase_identifier_robust047/structure_checks.py": "39dc43cb514938458029a52d9b755a92830e42cea1076d97146c6b98c6b9e1ee",
+    "phase_identifier_robust047/summarize_remote.py": "721490b9df3a73f8ab3151fc15ca9fcd211891073dd34d982c4207537c31f998",
+    "phase_identifier_robust047/test_robust.py": "63b6d5a06860bd69d165c491a225f8cc7c090b33056945ba668d4c2d7eea1edf",
+    "phase_identifier_robust047/uniform_guard.py": "52bbf48ea1a483ca1e8d2c629a5e857b578e13a35c353bdbb8b32522072201a6"
+  }
+}

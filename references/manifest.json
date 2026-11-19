@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "path": "scft_phase_identifier_v3/vendor/reference2d_20231228.mat",
+      "sha256": "9c1e04f59348a041782087023eae23bfefe755d64f90c145ee2d5950a9c81290",
+      "size": 199018
+    },
+    {
+      "path": "scft_phase_identifier_v3/vendor/reference3d_20240111.mat",
+      "sha256": "c284920a380ca0847943a5f12ec65931468ebd1912085bd6514fce524b199ac5",
+      "size": 20203688
+    }
+  ]
+}
