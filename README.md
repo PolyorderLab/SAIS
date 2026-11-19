@@ -7,8 +7,11 @@ real-space geometry/topology checks, and convergence/free-energy evidence gates.
 
 | Git ref | Purpose |
 | --- | --- |
-| `main`, tag `v4.0.1` | Frozen production classifier snapshot |
+| `main`, tag `v4.0.1-bundled` | Stable v4.0.1 classifier with bundled reference libraries |
 | `develop/v4.0.2` | Experimental supercell and structure-check development |
+
+The original `v4.0.1` tag remains the unchanged code-only snapshot. For a
+ready-to-run stable checkout use `main` or `v4.0.1-bundled`.
 
 Algorithm files retain their original contents and historical directory names.
 `SOURCE_MANIFEST.json` records their SHA-256 hashes. Creating this repository
@@ -19,14 +22,26 @@ does not deploy either version or alter the production database.
 Use Python 3.12+ with the dependency snapshot in `requirements.txt`.
 
 ```sh
+git clone https://github.com/PolyorderLab/SAIS.git
+cd SAIS
+# Optional experimental version: git switch develop/v4.0.2
 python -m venv .venv
 # Linux/macOS: source .venv/bin/activate
 # Windows PowerShell: .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python tools/reference_files.py --source /path/to/external/vendor
+python tools/reference_files.py
 python tools/verify_source.py
+python tools/smoke_recognition.py
 python entry.py --batch /path/to/cases.json --out /path/to/new-output
 ```
+
+Activate the virtual environment using the command for your operating system.
+Both reference libraries are included as regular Git files: no Git LFS setup,
+separate download, reference-file copying, Julia installation, or database
+connection is needed for `entry.py`. The repository is private, so cloning
+requires GitHub access. `smoke_recognition.py` generates temporary synthetic LAM
+and DIS inputs, invokes the real batch entry point, checks the expected labels,
+and removes its temporary files.
 
 `cases.json` has this structure (use unique filesystem-safe IDs):
 
@@ -45,13 +60,15 @@ Outputs contain per-case JSON evidence and `summary.json`. Candidate morphology
 is not proof of global thermodynamic stability. These entry points do not write
 database phase labels; source input hashes are checked before and after loading.
 
-## External references and data policy
+## Bundled references and data policy
 
-The two original reference MAT libraries are required but intentionally excluded
-from Git along with densities, batch pools, generated plots/results, databases,
-credentials, and environment directories. `references/manifest.json` records
-their names, sizes, and SHA-256 values. Obtain authorized copies separately;
-the setup helper validates both files before copying into the expected paths.
+The original `reference2d_20231228.mat` and `reference3d_20240111.mat` are included
+under `scft_phase_identifier_v3/vendor/` (about 20.4 MB total).
+`references/manifest.json` records their names, sizes, and SHA-256 values.
+`python tools/reference_files.py` checks the bundled files. The optional
+`--source` argument is only for restoring matching files from a local backup.
+User density fields, batch pools, generated plots/results, databases,
+credentials, and environment directories remain excluded from Git.
 No new software/data license is inferred from this code snapshot.
 
 ## Layout
@@ -71,7 +88,9 @@ deployment is not packaged here.
 
 ```sh
 python tools/verify_source.py
+python tools/reference_files.py
 python tools/check_synthetic.py
+python tools/smoke_recognition.py
 python entry.py --help
 ```
 

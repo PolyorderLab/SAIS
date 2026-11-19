@@ -17,4 +17,4 @@ for f in files:
                     raise SystemExit('Refusing to overwrite different file: '+str(dst))
             else:
                 dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,dst)
-print('Both external reference libraries verified')
+print('Both reference libraries verified')
