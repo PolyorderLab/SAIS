@@ -15,14 +15,15 @@ def load(path):
  if path.is_dir():
   with h5py.File(path/'densities.h5') as f:fields=[f[k][...].transpose(tuple(reversed(range(f[k].ndim)))) for k in sorted(f) if k.startswith('phi')]
   from math import cos,sin,sqrt
-  u=yaml.safe_load((path/'summary.yml').read_text(encoding='utf-8'))['lattice']['unitcell'];n=int(u['dim']);a=float(u['a'])
+  summary_path=path/('summary.yml' if (path/'summary.yml').exists() else 'summary.json')
+  u=yaml.safe_load(summary_path.read_text(encoding='utf-8'))['lattice']['unitcell'];n=int(u['dim']);a=float(u['a'])
   A=np.array([[a]])
   if n>=2:
    b,g=float(u['b']),float(u['γ']);A=np.array([[a,b*cos(g)],[0,b*sin(g)]])
   if n==3:
    c,al,be=float(u['c']),float(u['α']),float(u['β']);x=c*cos(be);y=c*(cos(al)-cos(be)*cos(g))/sin(g)
    A=np.array([[a,b*cos(g),x],[0,b*sin(g),y],[0,0,sqrt(c*c-x*x-y*y)]])
-  hashes={p.name:sha(p) for p in [path/'densities.h5',path/'summary.yml']}
+  hashes={p.name:sha(p) for p in [path/'densities.h5',summary_path]}
  elif h5py.is_hdf5(path):
   with h5py.File(path) as f:
    fields=[f[r][...].transpose(tuple(reversed(range(f[r].ndim)))) for r in f['component'][...].flat];A=np.linalg.inv(f['M'][...])

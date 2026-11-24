@@ -1,5 +1,5 @@
 {
-  "version": "v4.0.2",
+  "version": "v4.0.3",
   "files": {
     "entry.py": "380e0a76823d743892be8dbcc35e2aca7784f38b090daab94104f8bca292c35d",
     "structure061/approximate_particle402.py": "705c15d5055b34d4940a913a6a34cff5e55e781392598bb0976244ad12c180d6",
@@ -23,10 +23,10 @@
     "structure061/test_controls.py": "cbb7d7da4c08b1e11876311250c6ac8872d82618b54f4aba284488fcc94d39a2",
     "structure061/test_geometry061.py": "3d0d80fd7871e450a684e6189346dd8881a0568e92f43f1f016acacc6e39e584",
     "structure061/test_joint_evidence.py": "e8c7e236d8410fb989c25d7851f691fccbb9026f730195b17b4475f358ef6a05",
-    "investigation068/base061.py": "faceb497d1406cba35bb4f3222f8b8aa6a8149436bbf9797ed11eadfec91046d",
-    "investigation068/joint_evidence.py": "fde4c81007460843045bad72b4de3760e4e18ec5bd0d17e493da368f6da639ac",
+    "investigation068/base061.py": "a689fc30b35fb474ea9baf8baae013a9a961755a6d081df6da1579be76aa7235",
+    "investigation068/joint_evidence.py": "252b61e36635e15007fe1f8c9662ed39167191f2e4371c0d01bd675da0f40f97",
     "phase_identifier_robust047/classify.py": "5abfcaec6bbefb1244df760e993bafe6f376ea2d7f4ec3174d59c1bb27aaa1f7",
-    "phase_identifier_robust047/classify_batch.py": "14ea2c9c518f184eaa45fe5c9b47adaac1d889eb57f20f4f98d72c78b8b08413",
+    "phase_identifier_robust047/classify_batch.py": "b0e2c6af78614c03c850c6214d4a3c994b906d37e77382d50564eef425a2528b",
     "phase_identifier_robust047/diagnose.py": "28ed33d2933ba74850513f4091a1d67e86979971bc8425bf6c62be218bd0435f",
     "phase_identifier_robust047/effective_2d.py": "7794d38878dacbe8740d53896c217989b2a02a465001326c050964fa1084d374",
     "phase_identifier_robust047/robust_checks.py": "9dfa1a40432ea41030ffa9545439dfd03d4693098d4e735f57b9243e206fd629",
@@ -34,9 +34,15 @@
     "phase_identifier_robust047/summarize_remote.py": "721490b9df3a73f8ab3151fc15ca9fcd211891073dd34d982c4207537c31f998",
     "phase_identifier_robust047/test_robust.py": "63b6d5a06860bd69d165c491a225f8cc7c090b33056945ba668d4c2d7eea1edf",
     "phase_identifier_robust047/uniform_guard.py": "52bbf48ea1a483ca1e8d2c629a5e857b578e13a35c353bdbb8b32522072201a6",
-    "structure061/run.py": "e965d89444dd4cfa8fe2e07097fb9baa6021ccd93bf568cf020a8f66c40f2c8c",
+    "structure061/run.py": "dad0b4b79eaff3df211b2cbfac78d2bb4ec09adfc5c76554f85993c4f59f2fa7",
     "structure061/acceptance402.py": "31d6e9e3c594f5cfb6b2728dcb7d85470dbfc22d2e07630d4359558718dd7604",
-    "tests/test_acceptance402.py": "a32d533850f9b4d1b534a46cba7338366869176f145162ad99fc5cccc69ce9dc"
+    "tests/test_acceptance402.py": "a32d533850f9b4d1b534a46cba7338366869176f145162ad99fc5cccc69ce9dc",
+    "RULESET_REVISION": "6b599d957dc58af8f4822be037527a687ee796a5778c4ac1eeb3161408de1b91",
+    "docs/polyorder-cell-scope.md": "82146476d1a80cb0db06e7c6822bea8f1550119922c2045da7f0a1820ec6d936",
+    "tests/test_polyorder_cell_scope.py": "51ac7bfe0484d20bcc2eef62630ca26b41b59c6b3327de7fc78b61cbc2180e7d",
+    "VERSION": "5d29500c220fecfb0c7b899ae1fe18816dd2fbe4f875613ddbe72997b8426f17",
+    "README.md": "5cafbbf4ece2ebd34c0b2e8132fc6592badfa82d174a81a281b46f3ab11004dd"
   },
-  "acceptance_revision": "2026-11-24"
+  "acceptance_revision": "2026-11-24",
+  "ruleset_revision": "v4.0.3-polyorder-cell-scope-20261124"
 }

@@ -3,14 +3,97 @@
 SCFT phase identification: Fourier reflection matching, dimensional routing,
 real-space geometry/topology checks, and convergence/free-energy evidence gates.
 
+## v4.0.3 — explicit cell scope and Polyorder compatibility (2026-11-24)
+
+This release separates **fixed-cell SCFT convergence** from **cell-optimized
+convergence**, and reads current Polyorder metadata without changing numerical
+tolerances. It builds on the v4.0.2 morphology/acceptance rules.
+
+| Declared calculation kind | Required convergence checks |
+| --- | --- |
+| `fixed_cell` | Exact successful solver state, absolute field-residual stopping mode, and residual <= configured `scft.tol`. Stress is recorded as a diagnostic; zero stress is not required. |
+| `cell_optimized` | The same field checks **plus** finite nonnegative `stress_norm` <= configured `cellopt.gtol` or `cellopt.tol_stress`. |
+| No declaration | Preserve the historical strict field-and-stress requirement. Do not infer calculation kind from stress, directory names, phase labels, or closeness to an expected cell size. |
+| Unknown or malformed declaration | Withhold acceptance for metadata review. |
+
+**Declare scope explicitly** in a `calculation.json` sidecar beside the metadata:
+
+```json
+{
+  "kind": "fixed_cell",
+  "source": "recorded solver invocation / registered calculation metadata"
+}
+```
+
+Use `"kind": "cell_optimized"` for a cell-optimization solve. The same object
+may be supplied as `config.calculation`. A sidecar is useful when source
+configurations must remain byte-identical. Its hash is included in result
+provenance. A declaration describes the actual calculation; it is not a way to
+relabel an unconverged cell-optimization run as fixed-cell.
+
+Compatibility additions:
+
+- Read native `config.json` / `summary.json`, alongside the existing YAML inputs.
+- Accept exact `Polyorder.Successful()` and legacy `JuPolyorder.Successful()`
+  status strings. `Acceptable`, failed, unknown, and missing status values do not pass.
+- Support `tol_stress` and legacy `gtol` for the cell-stress tolerance.
+  Conflicting aliases are rejected; tolerances are never enlarged.
+- Preserve the recorded stress convention. In the audited 1D Polyorder export,
+  `stress_norm` is the norm of the cell gradient (dF/dL); the separately recorded
+  tensor-like diagnostic is L*dF/dL. These quantities are not silently exchanged.
+- Preserve density, composition, morphology, scattering/extinction, DIS-energy
+  and aligned-trace checks. A fixed-cell exemption applies **only** to cell
+  stationarity, not to field convergence or the other acceptance gates.
+
+### v4.0.3 validation and database publication
+
+| Check | Result / scope |
+| --- | --- |
+| New metadata/scope tests | 12 passed, including high-stress fixed-cell acceptance, high-stress optimized-cell rejection, failed/nonfinite residual rejection, unknown scope, conflicting tolerance aliases, native JSON input and energy-gate negative controls. |
+| Existing morphology acceptance tests | 12 passed. |
+| Bundled end-to-end controls | LAM and DIS passed; inputs unchanged. |
+| Actual legacy metadata comparison | 512 stored records retained their old convergence pass/fail decisions. |
+| Latest local SCFT batch | 1,550/1,550 classified LAM and independently checked as single-period layered fields: 1,395 fixed-cell + 155 cell-optimized. All original source hashes remained unchanged. |
+
+The 1,550-point batch covers linear AB melts, f=0.30/0.35/0.40/0.45/0.50,
+chiN=20..50, and ten L/L0 values from 0.6 to 1.2. Independent checks used both
+density components, composition/incompressibility, Fourier mode and periodic
+level-crossing counts, field residuals and the appropriate cell-stress scope.
+All energies were native Polyorder **F**, without an F+1 shift, and below the
+corresponding DIS reference. This does **not** prove global thermodynamic
+stability, unique space-group identity, or independent spatial/contour-grid
+convergence. The 155 equilibrium configuration snapshots retain their explicit
+reconstruction markers; actual densities, fields and energies came from saved
+solver states.
+
+After review, these 1,550 machine results were added to the intranet database
+with the dated ruleset identifier `v4.0.2-cell-scope-20261124`; the original
+1,550 metadata-review results were retained as a separate history version.
+v4.0.3 is the versioned software release of that tested scope/compatibility
+patch. Existing result hashes and dated identifiers are retained rather than
+rewritten retroactively. Raw calculations, native F values, prior machine
+records, and unrelated current labels were preserved. Manual identified-phase
+fields were not overwritten.
+
+Per-case densities, SQL backups, machine evidence and audit artifacts remain
+outside Git. The statistics above are a scoped regression/review result,
+**not independently adjudicated full-library accuracy**. Running this
+repository only produces reports; it does not write database labels.
+
+See [scope and metadata details](docs/polyorder-cell-scope.md). Historical
+module names ending in `402` describe implementation lineage and remain valid
+in v4.0.3.
+
 ## Versions
 
 | Git ref | Purpose |
 | --- | --- |
 | `main`, tag `v4.0.1-bundled` | Stable v4.0.1 classifier with bundled reference libraries |
-| `develop/v4.0.2` | Experimental supercell and structure-check development |
+| `develop/v4.0.2` | Previous experimental supercell and structure-check development |
+| `develop/v4.0.3`, tag `v4.0.3` | Cell-scope acceptance and current Polyorder metadata compatibility |
 
-The original `v4.0.1` tag remains the unchanged code-only snapshot. For a
+The original `v4.0.1` tag remains the unchanged code-only snapshot.
+The v4.0.2 branch and stable main branch are preserved. For a
 ready-to-run stable checkout use `main` or `v4.0.1-bundled`.
 
 Historical directory names are retained. `SOURCE_MANIFEST.json` records this
@@ -248,7 +331,8 @@ Use Python 3.12+ with the dependency snapshot in `requirements.txt`.
 ```sh
 git clone https://github.com/PolyorderLab/SAIS.git
 cd SAIS
-# Optional experimental version: git switch develop/v4.0.2
+# Current scope-aware version: git switch develop/v4.0.3
+# Exact release snapshot: git checkout v4.0.3
 python -m venv .venv
 # Linux/macOS: source .venv/bin/activate
 # Windows PowerShell: .venv\Scripts\Activate.ps1

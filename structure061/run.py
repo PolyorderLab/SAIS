@@ -125,7 +125,7 @@ if __name__=='__main__':
         r['candidate']=canonical(r['candidate'])
         r['physical_phase_candidate']=r['candidate']
         r=apply_joint_evidence(r,f,Path(c['input']),c.get('metadata_dir'))
-        r.update(release_version='v4.0.2-experimental',id=c['id'],input_hashes_before=before,input_hashes_after=load(Path(c['input']))[2],confirmed_label=None,database_written=False)
+        r.update(release_version='v4.0.3',id=c['id'],input_hashes_before=before,input_hashes_after=load(Path(c['input']))[2],confirmed_label=None,database_written=False)
         assert before==r['input_hashes_after']
         (out/(c['id']+'.json')).write_text(json.dumps(r,indent=2))
         summary.append(dict(id=c['id'],candidate=r['candidate'],status=r['status']))

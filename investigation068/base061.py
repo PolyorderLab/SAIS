@@ -66,24 +66,53 @@ def dis_baseline(config, fields, policy):
                 ideal_gas_term=ideal, relative_chain_length=alpha,
                 chain_density=density)
 
-def convergence_evidence(summary, config):
+def convergence_evidence(summary, config, calculation=None):
+    """Explicit fixed-cell scope skips only the cell-stationarity requirement.
+    Missing scope retains the historical strict cell-optimized gate.
+    """
     if summary is None or config is None:
         return dict(passed=False, reason='missing_summary_or_config')
     try:
-        s, c = config['scft'], config['cellopt']
+        s = config['scft']
+        context = calculation if calculation is not None else config.get('calculation')
+        if context is None:
+            kind, scope_source = 'cell_optimized', 'legacy_strict_default'
+        elif not isinstance(context, dict) or context.get('kind') not in ('fixed_cell', 'cell_optimized'):
+            return dict(passed=False, reason='invalid_or_unknown_calculation_kind')
+        else:
+            kind, scope_source = context['kind'], 'explicit_calculation_metadata'
         residual = finite_number(summary['residual'])
-        stress = finite_number(summary['stress_norm'])
-        tol, gtol = finite_number(s['tol']), finite_number(c['gtol'])
-        # Only the residual stopping convention has been checked against sources.
+        tol = finite_number(s['tol'])
         mode_ok = s.get('tolmode') == 'Residual' and s.get('relative') is False
-        status_ok = summary.get('convergence') == 'JuPolyorder.Successful()'
-        valid = residual >= 0 and stress >= 0 and tol > 0 and gtol > 0
-        passed = valid and mode_ok and status_ok and residual <= tol and stress <= gtol
-        return dict(passed=bool(passed), reported_status=summary.get('convergence'),
+        reported = summary.get('convergence')
+        status_ok = reported in ('JuPolyorder.Successful()', 'Polyorder.Successful()')
+        cell = config.get('cellopt') or {}
+        stress = finite_number(summary['stress_norm']) if 'stress_norm' in summary else None
+        valid_stress = stress is None or stress >= 0
+        gtol = None
+        tolerance_field = None
+        stress_required = kind == 'cell_optimized'
+        if stress_required:
+            tolerances = [(k, finite_number(cell[k])) for k in ('gtol', 'tol_stress') if k in cell]
+            if not tolerances:
+                return dict(passed=False, reason='missing_cell_stress_tolerance', calculation_kind=kind)
+            if any(v <= 0 for _, v in tolerances) or any(not math.isclose(v, tolerances[0][1], rel_tol=1e-12, abs_tol=0.) for _, v in tolerances):
+                return dict(passed=False, reason='invalid_or_conflicting_stress_tolerance', calculation_kind=kind)
+            tolerance_field, gtol = tolerances[0]
+            stress_pass = stress is not None and stress >= 0 and stress <= gtol
+        else:
+            stress_pass = True
+        valid = residual >= 0 and tol > 0 and valid_stress
+        passed = valid and mode_ok and status_ok and residual <= tol and stress_pass
+        return dict(passed=bool(passed), reported_status=reported,
                     residual=residual, residual_tolerance=tol, stress_norm=stress,
-                    stress_tolerance=gtol, supported_stopping_convention=mode_ok,
-                    reason='summary_and_thresholds_pass' if passed else 'convergence_not_verified')
-    except (ValueError, TypeError, KeyError):
+                    stress_tolerance=gtol, stress_tolerance_field=tolerance_field,
+                    stress_required=stress_required, stress_gate_passed=bool(stress_pass),
+                    calculation_kind=kind, scope_source=scope_source,
+                    supported_stopping_convention=mode_ok,
+                    reason='field_residual_pass_fixed_cell' if passed and not stress_required else
+                           'field_and_cell_stress_pass' if passed else 'convergence_not_verified')
+    except (ValueError, TypeError, KeyError, OverflowError):
         return dict(passed=False, reason='invalid_or_missing_convergence_metadata')
 
 def trace_evidence(metadata, hashes):
@@ -108,10 +137,12 @@ def apply(result, fields, source, metadata_dir=None, policy=Policy()):
             0 < policy.dis_std < policy.weak_std and policy.energy_review_tolerance > 0):
         raise ValueError('Invalid review policy')
     source = Path(source); metadata = Path(metadata_dir) if metadata_dir else source
-    hashes = {}; errors = []; summary = config = None
+    hashes = {}; errors = []; summary = config = calculation = None
     try:
-        if source.is_dir(): summary = read_yaml(source/'summary.yml', hashes)
-        if metadata.is_dir(): config = read_yaml(metadata/'config.yml', hashes)
+        if source.is_dir(): summary = read_yaml(source/('summary.yml' if (source/'summary.yml').exists() else 'summary.json'), hashes)
+        if metadata.is_dir():
+            config = read_yaml(metadata/('config.yml' if (metadata/'config.yml').exists() else 'config.json'), hashes)
+            calculation = read_yaml(metadata/'calculation.json', hashes)
     except (ValueError, UnicodeError, yaml.YAMLError) as exc:
         errors.append(str(exc))
     a = [np.asarray(x, dtype=float) for x in fields]
@@ -124,7 +155,7 @@ def apply(result, fields, source, metadata_dir=None, policy=Policy()):
                  all(x.min() >= -policy.density_tolerance and x.max() <= 1+policy.density_tolerance for x in a))
     uniform = bool(valid and all(x['ptp'] <= policy.dis_ptp and x['std'] <= policy.dis_std for x in stats))
     weak = bool(valid and all(x['ptp'] <= policy.weak_ptp and x['std'] <= policy.weak_std for x in stats))
-    conv = convergence_evidence(summary, config)
+    conv = convergence_evidence(summary, config, calculation)
     energy = {'available': False}
     if valid and summary is not None and config is not None:
         try:
@@ -139,7 +170,8 @@ def apply(result, fields, source, metadata_dir=None, policy=Policy()):
     morphology = result.get('candidate')
     if result.get('status') == 'DIS_candidate': morphology = 'DIS'
     proposal = morphology
-    if not valid: status = 'review_invalid_density'
+    if errors: status = 'review_missing_or_unsupported_metadata'
+    elif not valid: status = 'review_invalid_density'
     elif config is None or summary is None or not energy['available']:
         status = 'review_missing_or_unsupported_metadata'
     elif not conv['passed']: status = 'review_convergence_unverified'

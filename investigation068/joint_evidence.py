@@ -60,6 +60,7 @@ def apply(*args, **kwargs):
     check = audit(e['traces'], e['convergence'])
     e['trace_consistency'] = check
     out['version'] = '068-aligned-trace-experimental'
+    out['ruleset_revision'] = 'v4.0.3-polyorder-cell-scope-20261124'
     if check['conflict']:
         out['prior_gate_status'] = out['status']
         out['prior_gate_candidate'] = out['candidate']
