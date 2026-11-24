@@ -17,6 +17,16 @@ and unresolved conflicts can still require review; no sample-ID label overrides.
 
 This is a snapshot of existing code, not a new algorithm release or deployment.
 
+### 2026-11-24 development update
+
+Adds the conservative `acceptance402` gate and synthetic regression tests;
+contradictory layer, particle, planar or network evidence can withhold a proposed
+label before the existing joint solver-evidence gate. README now includes the
+source-audited v3 workflow, v4 component changes and dated structural audit
+counts. The additional complex-phase/space-group audits remain external
+diagnostics, not classifier rules. Stable tags and production deployment are
+unchanged.
+
 ## Reference-library packaging
 
 `v4.0.1-bundled` and the updated development branch include the two original

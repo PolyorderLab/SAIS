@@ -23,3 +23,5 @@ outputs/
 test_artifacts/
 !scft_phase_identifier_v3/vendor/reference2d_20231228.mat
 !scft_phase_identifier_v3/vendor/reference3d_20240111.mat
+!docs/figures/sais-v3-workflow.png
+!docs/figures/sais-v4-components.png
