@@ -19,6 +19,7 @@ from lam_family402 import describe as diagnose_lam
 from supercell402 import select_representation
 from particle402 import apply as apply_particle
 from extinction402 import annotate as annotate_extinction
+from acceptance402 import apply as apply_acceptance
 
 def tri_audit(fields,A):
     # Independent conventional-cell A15 point-set fit, with periodic translations.
@@ -118,6 +119,8 @@ if __name__=='__main__':
             r=apply_particle(r,fs,B)
             r=annotate_extinction(r,fs)
         r['reference_key']=r.get('scattering_candidate')
+        if guard['decision']=='native_required':
+            r=apply_acceptance(r,fs,B)
         r['candidate_before_normalization']=r['candidate']
         r['candidate']=canonical(r['candidate'])
         r['physical_phase_candidate']=r['candidate']

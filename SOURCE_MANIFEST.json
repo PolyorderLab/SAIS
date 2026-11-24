@@ -17,7 +17,6 @@
     "structure061/publish061.py": "47931f1fe414ac4f3c5104207d85ff72bcec45047a733ff606df13cb1bb4ac50",
     "structure061/replay.py": "ad1e2a89da4fece86e8730995b6d5c7747c26e4bc0f39045af6f6c7ede49ca7a",
     "structure061/report.py": "ab1cd4bb63fbd2931e6ab30d929c7c14685cb3a26ba07c20972d474b1c8c9b1f",
-    "structure061/run.py": "f8969f08dbac9f5e5782658381d4ccb06d5cae84a1274e7a2c8940da87e72ed4",
     "structure061/scattering.py": "ddefc43599aa8048d8d96ec5e62377061c93a921e101dcbe641c0e5beeb9ad23",
     "structure061/structure_checks.py": "b927f505e8aca4d06a8adb562dc511d07214ca5b5195c31fdbb08dbf5b85fd14",
     "structure061/supercell402.py": "43e75e8168e10fcc8c4d4369dedda14b3268757e1b3124cd34dd78241b0a6c64",
@@ -34,6 +33,10 @@
     "phase_identifier_robust047/structure_checks.py": "39dc43cb514938458029a52d9b755a92830e42cea1076d97146c6b98c6b9e1ee",
     "phase_identifier_robust047/summarize_remote.py": "721490b9df3a73f8ab3151fc15ca9fcd211891073dd34d982c4207537c31f998",
     "phase_identifier_robust047/test_robust.py": "63b6d5a06860bd69d165c491a225f8cc7c090b33056945ba668d4c2d7eea1edf",
-    "phase_identifier_robust047/uniform_guard.py": "52bbf48ea1a483ca1e8d2c629a5e857b578e13a35c353bdbb8b32522072201a6"
-  }
+    "phase_identifier_robust047/uniform_guard.py": "52bbf48ea1a483ca1e8d2c629a5e857b578e13a35c353bdbb8b32522072201a6",
+    "structure061/run.py": "e965d89444dd4cfa8fe2e07097fb9baa6021ccd93bf568cf020a8f66c40f2c8c",
+    "structure061/acceptance402.py": "31d6e9e3c594f5cfb6b2728dcb7d85470dbfc22d2e07630d4359558718dd7604",
+    "tests/test_acceptance402.py": "a32d533850f9b4d1b534a46cba7338366869176f145162ad99fc5cccc69ce9dc"
+  },
+  "acceptance_revision": "2026-11-24"
 }
