@@ -3,6 +3,24 @@
 SCFT phase identification: Fourier reflection matching, dimensional routing,
 real-space geometry/topology checks, and convergence/free-energy evidence gates.
 
+## Method overview
+
+![Original SAIS method and audited Julia workflow](docs/figures/sais-v3-workflow.png)
+
+Original Julia workflow. Solid arrows show the audited FCC execution path;
+dashed arrows show the original stage-2 method not called by that wrapper.
+[Vector SVG](docs/figures/sais-v3-workflow.svg).
+
+![v4 updates mapped onto the original SAIS components](docs/figures/sais-v4-components.png)
+
+Updates within the v3 framework: black = original components, blue = v4.0.1,
+green = v4.0.2. Illustrations are schematic, not measured results.
+[Vector SVG](docs/figures/sais-v4-components.svg).
+
+[Detailed implementation notes and structural audit statistics](https://github.com/PolyorderLab/SAIS/blob/develop/v4.0.2/README.md)
+are maintained with the experimental code. These documentation images do not
+change the stable classifier on `main` or the frozen version tags.
+
 ## Versions
 
 | Git ref | Purpose |
